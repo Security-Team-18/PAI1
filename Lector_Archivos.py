@@ -2,9 +2,14 @@
 
 import hashlib
 import os
+from datetime import datetime
 
 sha = hashlib.sha256()
 
+def log(archivo):
+    now = datetime.now()
+    with open("./almacenamiento/log.txt", 'a') as file:
+        file.writelines(now.date() ' - ' + now.time() + " -> El fichero: " + archivo + " ha sido modificado")
 
 def hash_file(filename):
 
@@ -51,7 +56,7 @@ def comp_hash(filename, almacenamiento):
         
     if nombre in lista:
         if not (hash in lista_hash):
-            print("Se ha detectado un fallo de integridad en el archivo "+nombre)
+            log(nombre)
 
     else:
         with open(almacenamiento, 'a') as file:
