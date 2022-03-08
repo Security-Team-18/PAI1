@@ -6,10 +6,13 @@ from datetime import datetime
 
 sha = hashlib.sha256()
 
+
 def log(archivo):
+    
     now = datetime.now()
+    fecha=now.strftime("%d/%m/%Y %H:%M:%S")
     with open("./almacenamiento/log.txt", 'a') as file:
-        file.writelines(now.date() ' - ' + now.time() + " -> El fichero: " + archivo + " ha sido modificado")
+        file.writelines(fecha+ " - " + now.time() + " -> El fichero: " + archivo + " ha sido modificado")
 
 def hash_file(filename):
 
