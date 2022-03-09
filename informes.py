@@ -5,6 +5,10 @@ import os
 from pathlib import Path
 import datetime
 from Lector_Archivos import comp_hash
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 
 tipoDir = './archivos'
 
@@ -74,6 +78,36 @@ def cicloCompletoMensual():
         log.write("El porcentaje de archivos integros que estamos verificando en el mes de " +  elegirMes(fechaActual) + ' es del ' + str(mensual/30) + '%')
         log.write("\n")
         log.close()
+
+    msg = MIMEMultipart()
+ 
+ 
+    # setup the parameters of the message
+    message = "Desde las oficinas de INSEGUS, le informamos de que el porcentaje de integridad de sus archivos mensuales es de un "+str(mensual/30)+"%.\nPara más infomación consulte los documentos necesarios.\nUn saludo"
+    password = "DonShelby"
+    msg['From'] = "lesliebandicoot@gmail.com"        
+    msg['To'] = "b3nji2000@gmail.com"
+    msg['Subject'] = "Log mensual"
+    msg.attach(MIMEText(message, 'plain'))
+ 
+ 
+   
+    server = smtplib.SMTP('smtp.gmail.com: 587')
+
+ 
+    server.starttls()
+ 
+    
+    server.login(msg['From'], password)
+ 
+ 
+    
+    server.sendmail(msg['From'], msg['To'], msg.as_string())
+ 
+    server.quit()
+ 
+
+
 
 
 cicloCompletoMensual()

@@ -58,8 +58,3 @@ def comp_hash(path):
         
 
 
-#escritura()
-comp_hash('./archivos')
-
-#conexion= sqlite3.connect("hashbase.db")
-#conexion.execute("""drop table ficheros""")
