@@ -2,6 +2,7 @@
 
 import hashlib
 import os
+import sqlite3
 from datetime import datetime
 
 sha = hashlib.sha256()
@@ -12,7 +13,7 @@ def log(archivo):
     now = datetime.now()
     fecha=now.strftime("%d/%m/%Y %H:%M:%S")
     with open("./almacenamiento/log.txt", 'a') as file:
-        file.writelines(fecha+ " - " + now.time() + " -> El fichero: " + archivo + " ha sido modificado")
+        file.writelines(fecha+ " -> El fichero: " + archivo + " ha sido modificado \n")
 
 def hash_file(filename):
 
@@ -44,28 +45,29 @@ def escritura(filename):
 
 
 
-def comp_hash(filename, almacenamiento):
-    ruta=filename.split('/')
-    nombre=ruta[-1]
-    hash=hash_file(filename)
-    archivo=open(almacenamiento, 'r')
-    lineas=archivo.readlines()
-    lista=[]  
-    lista_hash=[]
-    for linea in lineas:
-        trozos=linea.split(':')
-        lista.append(trozos[0])
-        lista_hash.append(trozos[1])
-        
-    if nombre in lista:
-        if not (hash in lista_hash):
-            log(nombre)
+def comp_hash(ruta, almacenamiento):
+    contenido= os.listdir(ruta)
+    for filename in contenido:
+        nombre=filename
+        hash=hash_file(ruta+'/'+filename)
+        archivo=open(almacenamiento, 'r')
+        lineas=archivo.readlines()
+        lista=[]  
+        lista_hash=[]
+        for linea in lineas:
+            trozos=linea.split(':')
+            lista.append(trozos[0].rstrip("\n"))
+            lista_hash.append(trozos[1].rstrip("\n"))
+        if nombre in lista:
+            if hash in lista_hash:
+                print('Todo en orden')
+            else:
+                log(filename)
+        else:
+            with open(almacenamiento, 'a') as file:
+                file.writelines(nombre+':'+hash+'\n')
 
-    else:
-        with open(almacenamiento, 'a') as file:
-            file.writelines(nombre+':'+hash+'\n')
 
+#escritura('./almacenamiento/prueba.txt')
 
-#escritura(".\\almacenamiento\\prueba.txt")
-
-comp_hash('./archivos/a.txt', './almacenamiento/prueba.txt')
+comp_hash('./archivos', './almacenamiento/prueba.txt')
